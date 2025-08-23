@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ma Mamata Varity Store</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+    <style>
+        body {
+            padding-top: 80px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: 0;
+            right: -8px;
+            transform: translate(50%, -50%);
+        }
+
+        .contact-icon {
+            transition: transform .3s, color .3s;
+        }
+
+            .contact-icon:hover {
+                transform: scale(1.2);
+                color: #25d366;
+            }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "Home")">
+                <i class="bi bi-bag-check-fill me-2"></i> Ma Mamata Store
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" aria-controls="navbarContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productsDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-box-seam me-1"></i> Products
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Index", "Products")">
+                                    <i class="bi bi-list-ul me-1"></i> All Products
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    @* Admin only Manage All *@
+                    @{
+                        var userRole = Context.Session.GetString("UserRole");
+                    }
+                    @if (userRole == "Admin")
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="manageDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill me-1"></i> Manage All
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="manageDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Manage", "Products")">
+                                        <i class="bi bi-box-seam me-1"></i> Manage Products
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Manage", "Order")">
+                                        <i class="bi bi-card-checklist me-1"></i> Manage Orders
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Users")">
+                                        <i class="bi bi-people-fill me-1"></i> Manage Users
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+
+                <form asp-controller="Products" asp-action="Search" method="get"
+                      class="d-flex mx-lg-3 my-2 my-lg-0 flex-grow-1" style="max-width: 500px;">
+                    <input class="form-control me-2" type="search" name="query"
+                           placeholder="Search for products..." aria-label="Search" required />
+                    <button class="btn btn-outline-light" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    @* Show Cart & My Orders only if not admin *@
+                    @if (userRole != "Admin")
+                    {
+                        <li class="nav-item position-relative me-2">
+                            @{
+                                var cartCount = Context.Session.GetInt32("CartCount") ?? 0;
+                            }
+                            <a class="nav-link position-relative" href="@Url.Action("Index", "Cart")">
+                                <i class="bi bi-cart-fill me-1"></i> Cart
+                                @if (cartCount > 0)
+                                {
+                                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
+                                        @cartCount
+                                    </span>
+                                }
+                            </a>
+                        </li>
+
+                        <li class="nav-item me-2">
+                            <a class="nav-link" href="@Url.Action("MyOrders", "Order")">
+                                <i class="bi bi-box-seam me-1"></i> My Orders
+                            </a>
+                        </li>
+                    }
+
+                    @* Authentication *@
+                    @{
+                        var userId = Context.Session.GetInt32("UserId");
+                        var userName = Context.Session.GetString("UserName");
+                    }
+                    @if (userId != null)
+                    {
+                        <li class="nav-item d-flex align-items-center me-2">
+                            <span class="navbar-text me-2 mb-0">Hi, <strong>@userName</strong></span>
+                            <form asp-controller="Account" asp-action="Logout" method="get" class="m-0 p-0 d-inline">
+                                <button type="submit" class="btn btn-link nav-link p-0 text-light mb-0" style="line-height:1;">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item me-2">
+                            <a class="nav-link" href="@Url.Action("Login", "Account")">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Register", "Account")">Sign Up</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        @RenderBody()
+    </div>
+
+    <footer class="bg-dark text-light mt-5 pt-4 pb-2">
+        <div class="container text-center">
+            <div class="mb-2"><strong>Need help? Contact us via</strong></div>
+            <div class="mb-3 d-flex justify-content-center gap-4">
+                <a href="mailto:saifulislam01686935887@gmail.com" class="text-light contact-icon fs-4" title="Email Us">
+                    <i class="bi bi-envelope-fill"></i>
+                </a>
+                <a href="https://wa.me/01686935887" target="_blank"
+                   class="text-light contact-icon fs-4" title="Chat on WhatsApp">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+            </div>
+            <div class="small">
+                &copy; @DateTime.Now.Year <strong>Ma Mamata Varity Store</strong>. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

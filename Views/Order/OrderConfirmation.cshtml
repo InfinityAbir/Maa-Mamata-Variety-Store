@@ -1,0 +1,51 @@
+﻿@model Ecommerce.Models.Order
+
+<div class="container my-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h2 class="card-title text-success mb-3">
+                ✅ Order Placed Successfully!
+            </h2>
+
+            <div class="mb-4">
+                <p><strong>Order ID:</strong> <span class="text-primary">@Model.OrderId</span></p>
+                <p><strong>Customer Name:</strong> @Model.CustomerName</p>
+                <p><strong>Total Amount:</strong> <span class="fw-bold">৳@Model.TotalAmount.ToString("N0")</span></p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="badge bg-info text-dark">@Model.Status</span>
+                </p>
+                <p><strong>Payment Method:</strong> @Model.PaymentMethod</p>
+            </div>
+
+            <h4 class="mt-4">Order Items</h4>
+            <table class="table table-striped table-hover mt-2">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>৳@item.Price.ToString("N0")</td>
+                            <td>৳@(item.Price* item.Quantity)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="mt-4">
+                <a href="@Url.Action("Index", "Products")" class="btn btn-primary">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

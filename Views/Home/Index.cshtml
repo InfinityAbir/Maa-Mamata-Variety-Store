@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "Home - Ma Mamata Varity Store";
+}
+
+<style>
+    /* Global Styles */
+    body {
+        background: #f8f9fa !important; /* light flat background */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #2980b9, #27ae60);
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+        border-radius: 0 0 40px 40px;
+        margin-bottom: 50px;
+    }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .hero p.lead {
+            font-size: 1.3rem;
+            margin-top: 15px;
+        }
+
+    .shop-now-btn {
+        border-radius: 30px;
+        padding: 12px 35px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: transform 0.3s, background-color 0.3s, color 0.3s;
+    }
+
+        .shop-now-btn:hover {
+            transform: scale(1.1);
+            background-color: #25d366;
+            color: #fff;
+        }
+
+    /* About Section */
+    .about-section {
+        background: linear-gradient(135deg, #2980b9, #27ae60);
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+        border-radius: 0 0 40px 40px;
+        margin-bottom: 50px;
+    }
+
+        .about-section h2 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .about-section p.lead {
+            font-size: 1.3rem;
+            margin-top: 15px;
+        }
+
+        .about-section i {
+            color: #ffffff;
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+
+    @@media (max-width: 768px) {
+        .about-section
+
+    {
+        padding: 60px 15px;
+    }
+
+    .about-section h2 {
+        font-size: 2.2rem;
+    }
+
+    .about-section p.lead {
+        font-size: 1.1rem;
+    }
+    }
+
+    /* Highlights Section */
+    .highlights {
+        padding: 50px 20px;
+        margin: 50px auto;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+        .highlights .card {
+            border: none;
+            border-radius: 15px;
+            padding: 30px 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: linear-gradient(135deg, #2980b9, #27ae60);
+            color: white;
+        }
+
+            .highlights .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            }
+
+        .highlights i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .highlights h4 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .highlights p {
+            color: #000;
+            font-size: 1rem;
+        }
+
+    /* Quote Section */
+    .quote-section {
+         background: linear-gradient(135deg, #2980b9, #27ae60);
+        color: white;
+        font-style: italic;
+        padding: 40px 20px;
+        border-radius: 20px;
+        text-align: center;
+        margin: 50px auto;
+        max-width: 900px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+</style>
+
+<main role="main">
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Ma Mamata Varity Store</h1>
+        <p class="lead">Your trusted shop for groceries & daily essentials</p>
+        <p class="fst-italic" style="font-size: 1.1rem;">"Good food is the foundation of genuine happiness."</p>
+        <a href="@Url.Action("Index", "Products")" class="btn btn-light shop-now-btn shadow-sm">
+            Shop Now
+        </a>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section container my-5 py-5 px-4 text-center">
+        <h2 class="mb-3">About Our Store</h2>
+        <p class="lead mb-4">
+            At <strong>Ma Mamata Varity Store</strong>, we aim to provide high-quality groceries,
+            fresh products, and essentials at affordable prices. Our goal is to
+            serve our community with trust and convenience.
+        </p>
+        <p class="mb-0">
+            <i class="bi bi-geo-alt-fill me-2"></i>
+            <strong>Address:</strong> Kamarpara Notun Bazaar, Dhaka-1230
+        </p>
+    </section>
+
+
+    <!-- Highlights Section -->
+    <section class="highlights container my-5">
+        <h2 class="fw-bold text-center mb-4">Why Choose Us?</h2>
+        <div class="row g-4 justify-content-center">
+            <!-- Fresh Groceries -->
+            <div class="col-md-4">
+                <div class="card text-center py-4">
+                    <i class="bi bi-basket-fill fs-1 mb-3" style="color:#27ae60;"></i>
+                    <h4>Fresh Groceries</h4>
+                    <p>Daily essentials and fresh produce for your family.</p>
+                </div>
+            </div>
+
+            <!-- Wide Variety -->
+            <div class="col-md-4">
+                <div class="card text-center py-4">
+                    <i class="bi bi-bag-fill fs-1 mb-3" style="color:#2980b9;"></i>
+                    <h4>Wide Variety</h4>
+                    <p>From snacks to household goods, we have it all.</p>
+                </div>
+            </div>
+
+            <!-- Fast Delivery -->
+            <div class="col-md-4">
+                <div class="card text-center py-4">
+                    <i class="bi bi-truck fs-1 mb-3" style="color:#e67e22;"></i>
+                    <h4>Fast Delivery</h4>
+                    <p>Convenient doorstep delivery for your busy lifestyle.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+        <h3>"Food is not just fuel, it's love, comfort & family."</h3>
+    </section>
+
+</main>

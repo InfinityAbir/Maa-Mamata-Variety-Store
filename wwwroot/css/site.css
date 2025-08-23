@@ -1,0 +1,90 @@
+﻿/* Apply flat light grey background for all pages */
+body {
+    background-color: #f8f9fa; /* light grey */
+    margin: 0;
+    padding: 0;
+}
+
+    /* Remove any background images */
+    body::before {
+        content: none !important;
+    }
+
+/* Hero section */
+.hero-section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    color: #333;
+    background: none !important; /* no background image */
+}
+
+/* Remove dark overlay */
+.overlay {
+    display: none !important;
+}
+
+/* Hero content */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    background: none;
+    padding: 50px 30px;
+    border-radius: 0;
+    max-width: 600px;
+    margin: auto;
+    color: #222;
+}
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        color: #000;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 30px;
+        color: #555;
+    }
+
+        .hero-content p a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+/* Login button */
+.login-button {
+    background-color: #007bff;
+    color: white;
+    padding: 14px 35px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+    .login-button:hover {
+        background-color: #0056b3;
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .login-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}

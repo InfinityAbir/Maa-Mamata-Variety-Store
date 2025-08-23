@@ -1,0 +1,109 @@
+﻿@model Ecommerce.Models.RegisterViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Register - Ma Mamata Store";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+<style>
+    body {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f);
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    .register-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 400px;
+    }
+
+        .register-card .card-header {
+            font-weight: bold;
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff4b2b;
+        }
+
+    .btn-register {
+        background-color: #ff4b2b;
+        color: #fff;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .btn-register:hover {
+            background-color: #e03e1b;
+        }
+
+    a {
+        color: #ff4b2b;
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    .footer-text {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #ff4b2b;
+    }
+</style>
+
+<div class="register-card">
+    <div class="card-header">Create Your Account</div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <form asp-action="Register" method="post">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Full Name</label>
+            <input asp-for="Name" class="form-control" placeholder="Enter full name" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" type="email" class="form-control" placeholder="Enter email" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <!-- Hidden input to enforce Customer role -->
+        <input type="hidden" asp-for="Role" value="Customer" />
+
+        <button type="submit" class="btn btn-register w-100">Create Account</button>
+    </form>
+
+    <p class="text-center mt-3">
+        Already have an account? <a asp-controller="Account" asp-action="Login">Login</a>
+    </p>
+
+    <p class="footer-text">
+        Need help? Contact via
+        <a href="mailto:abirha3896@gmail.com">Email</a> or
+        <a href="https://wa.me/8801701554707" target="_blank">WhatsApp</a>
+    </p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

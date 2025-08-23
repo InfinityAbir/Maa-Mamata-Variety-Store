@@ -1,0 +1,66 @@
+﻿@model List<Ecommerce.Models.CartItem>
+
+<h2>Shopping Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-bordered align-middle">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th class="text-center">Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>৳@item.Price.ToString("N0")</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <form asp-action="DecreaseQuantity" method="post" class="me-1">
+                                <input type="hidden" name="id" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                            </form>
+
+                            <span class="px-2 fw-bold">@item.Quantity</span>
+
+                            <form asp-action="IncreaseQuantity" method="post" class="ms-1">
+                                <input type="hidden" name="id" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>৳@(item.Price* item.Quantity)</td>
+                    <td>
+                        <form asp-action="Remove" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash me-1"></i> Remove
+                            </button>
+                        </form>
+
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-info btn-sm ms-1">
+                            Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex gap-2">
+        <form asp-action="Clear" method="post">
+            <button type="submit" class="btn btn-warning">Clear Cart</button>
+        </form>
+        <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">Checkout</a>
+    </div>
+}
