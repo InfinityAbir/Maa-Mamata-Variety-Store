@@ -1,4 +1,4 @@
-﻿using Ecommerce.Helpers; // For session extension
+using Ecommerce.Helpers; // For session extension
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +14,20 @@ namespace Ecommerce.Controllers
             _context = context;
         }
 
-        // List of areas inside Dhaka
-        private readonly List<string> DhakaAreas = new List<string>
+        // Admin check
+        private bool IsAdmin()
         {
-            "Adabor", "Agargaon", "Aftab Nagar", "Ashulia", "Badda", "Banasree", "Banani", "Baridhara", "Basabo", "Bashundhara",
-            "Baunia", "Birulia", "Boshundhara", "Cantonment", "Chandni Chowk", "Chowk Bazaar", "Dakshinkhan", "Dhanmondi",
-            "Diabari", "Farmgate", "Gabtali", "Gulshan", "Hazaribagh", "Islampur", "Jatrabari", "Jinjira", "Kafrul", "Kallyanpur",
-            "Khilgaon", "Khilkhet", "Kochukhet", "Lalbagh", "Lalmatia", "Manikdi", "Matikata", "Mohakhali", "Mohammadpur",
-            "Monipur", "Motijheel", "Nimtoli", "Paltan", "Pallabi", "Rampura", "Sadarghat", "Savar",
-            "Segunbagicha", "Shahbagh", "Shahjadpur", "Shyamoli", "Sutrapur", "Tejgaon", "Tejgaon Industrial Area", "Vatara",
-            "Vashantek", "Wari", "Uttara", "Uttarkhan", "Gabtali", "Mirpur"
-        };
+            var role = HttpContext.Session.GetString("UserRole");
+            return role != null && role == "Admin";
+        }
 
         private bool IsUserLoggedIn()
         {
             return HttpContext.Session.GetInt32("UserId") != null || HttpContext.Session.Keys.Contains("CustomerEmail");
         }
 
-        private bool IsInsideDhaka(string address)
-        {
-            if (string.IsNullOrWhiteSpace(address)) return false;
-
-            address = address.ToLower();
-            return DhakaAreas.Any(area => address.Contains(area.ToLower()));
-        }
-
         // ===============================
-        // Checkout page
+        // Customer Checkout & Place Order
         // ===============================
         public IActionResult Checkout()
         {
@@ -52,14 +39,9 @@ namespace Ecommerce.Controllers
                 return RedirectToAction("Index", "Products");
 
             ViewBag.Cart = cart;
-            ViewBag.DhakaAreas = DhakaAreas;
-
             return View(cart);
         }
 
-        // ===============================
-        // Place Order
-        // ===============================
         [HttpPost]
         public IActionResult PlaceOrder(string name, string email, string address, string phone, string deliveryLocation)
         {
@@ -70,34 +52,8 @@ namespace Ecommerce.Controllers
             if (cart == null || !cart.Any())
                 return RedirectToAction("Index", "Products");
 
-            bool isAddressInsideDhaka = IsInsideDhaka(address);
-
-            // Validate delivery location
-            if ((deliveryLocation == "Inside Dhaka" && !isAddressInsideDhaka) ||
-                (deliveryLocation == "Outside Dhaka" && isAddressInsideDhaka))
-            {
-                TempData["Error"] = "❌ Your selected delivery location does not match your address. Please correct it.";
-                return RedirectToAction("Checkout");
-            }
-
-            // Stock validation
-            foreach (var item in cart)
-            {
-                var product = _context.Products.FirstOrDefault(p => p.Id == item.ProductId);
-                if (product == null)
-                {
-                    TempData["Error"] = $"❌ Product {item.ProductName} no longer exists.";
-                    return RedirectToAction("Checkout");
-                }
-                if (product.Quantity < item.Quantity)
-                {
-                    TempData["Error"] = $"❌ Sorry, \"{product.Name}\" is not available in the requested quantity. Only {product.Quantity} left.";
-                    return RedirectToAction("Checkout");
-                }
-            }
-
             decimal subtotal = cart.Sum(c => c.Price * c.Quantity);
-            decimal deliveryCharge = isAddressInsideDhaka ? 60 : 100;
+            decimal deliveryCharge = deliveryLocation == "Inside Dhaka" ? 60 : 100;
             decimal totalAmount = subtotal + deliveryCharge;
 
             var order = new Order
@@ -117,7 +73,6 @@ namespace Ecommerce.Controllers
             _context.Orders.Add(order);
             _context.SaveChanges();
 
-            // Add order items and reduce stock
             foreach (var item in cart)
             {
                 _context.OrderItems.Add(new OrderItem
@@ -136,7 +91,6 @@ namespace Ecommerce.Controllers
 
             _context.SaveChanges();
 
-            // Save guest email
             if (!HttpContext.Session.Keys.Contains("UserEmail"))
                 HttpContext.Session.SetString("CustomerEmail", email);
 
@@ -146,9 +100,6 @@ namespace Ecommerce.Controllers
             return RedirectToAction("OrderConfirmation", new { id = order.OrderId });
         }
 
-        // ===============================
-        // Order Confirmation
-        // ===============================
         public IActionResult OrderConfirmation(int id)
         {
             var order = _context.Orders
@@ -159,9 +110,6 @@ namespace Ecommerce.Controllers
             return View(order);
         }
 
-        // ===============================
-        // My Orders (Customer)
-        // ===============================
         public IActionResult MyOrders()
         {
             if (!IsUserLoggedIn())
@@ -183,26 +131,6 @@ namespace Ecommerce.Controllers
             return View(orders);
         }
 
-        // ===============================
-        // Manage Orders (Admin)
-        // ===============================
-        public IActionResult Manage()
-        {
-            if (!IsUserLoggedIn())
-                return RedirectToAction("Login", "Account");
-
-            var orders = _context.Orders
-                                 .Include(o => o.OrderItems)
-                                 .ThenInclude(oi => oi.Product)
-                                 .OrderByDescending(o => o.OrderDate)
-                                 .ToList();
-
-            return View(orders);
-        }
-
-        // ===============================
-        // Cancel Order (Customer)
-        // ===============================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Cancel(int id)
@@ -220,12 +148,78 @@ namespace Ecommerce.Controllers
         }
 
         // ===============================
-        // Delete Order (Admin)
+        // Admin: Manage Orders
+        // ===============================
+        public IActionResult Manage()
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Account");
+
+            var orders = _context.Orders
+                                 .Include(o => o.OrderItems)
+                                 .ThenInclude(oi => oi.Product)
+                                 .OrderByDescending(o => o.OrderDate)
+                                 .ToList();
+
+            return View(orders);
+        }
+
+        // ===============================
+        // Admin: Edit Order
+        // ===============================
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Account");
+
+            var order = _context.Orders
+                                .Include(o => o.OrderItems)
+                                .FirstOrDefault(o => o.OrderId == id);
+            if (order == null) return NotFound();
+
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Order model)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Account");
+
+            if (id != model.OrderId) return BadRequest();
+
+            if (ModelState.IsValid)
+            {
+                var order = _context.Orders.Find(id);
+                if (order == null) return NotFound();
+
+                // Update order details
+                order.Status = model.Status;
+                order.CustomerName = model.CustomerName;
+                order.CustomerEmail = model.CustomerEmail;
+                order.CustomerPhone = model.CustomerPhone;
+                order.CustomerAddress = model.CustomerAddress;
+
+                _context.SaveChanges();
+                TempData["Success"] = "✅ Order updated successfully!";
+                return RedirectToAction("Manage");
+            }
+
+            return View(model);
+        }
+
+        // ===============================
+        // Admin: Delete Order
         // ===============================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Account");
+
             var order = _context.Orders
                                 .Include(o => o.OrderItems)
                                 .FirstOrDefault(o => o.OrderId == id);
@@ -235,7 +229,24 @@ namespace Ecommerce.Controllers
             _context.Orders.Remove(order);
             _context.SaveChanges();
 
+            TempData["Success"] = "✅ Order deleted successfully!";
             return RedirectToAction("Manage");
+        }
+
+        // ===============================
+        // Admin: Print Order
+        // ===============================
+        public IActionResult Print(int id)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Account");
+
+            var order = _context.Orders
+                                .Include(o => o.OrderItems)
+                                .FirstOrDefault(o => o.OrderId == id);
+            if (order == null) return NotFound();
+
+            return View(order);
         }
     }
 }
