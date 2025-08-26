@@ -76,6 +76,10 @@ Run the project using the command line instead of Visual Studio.
 3. Now Open the link & create product.
 ---
 
+### Email: abir@gmail.com
+### Password: 123456789
+
+---
 If user accidentally drop the database.
 Solution:
 Case: No Admin exists yet
