@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Ecommerce.Models.Product>
+@model IEnumerable<Ecommerce.Models.Product>
 @using Microsoft.AspNetCore.Http
 
 @{
@@ -22,11 +22,13 @@
                 + Add Product
             </a>
         }
-
-        <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-dark position-relative btn-sm shadow-sm">
-            Cart
-            <span class="badge bg-danger ms-2">@ViewBag.CartCount</span>
-        </a>
+        else
+        {
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-dark position-relative btn-sm shadow-sm">
+                Cart
+                <span class="badge bg-danger ms-2">@ViewBag.CartCount</span>
+            </a>
+        }
     </div>
 </div>
 
@@ -42,11 +44,42 @@
 
                 <!-- Product Details -->
                 <h6 class="fw-bold text-truncate">@item.Name</h6>
-                <p class="product-price mb-1">৳@item.Price.ToString("F2")</p>
+
+                <!-- Discount Logic -->
+                <div class="mb-1">
+                    @{
+                        int discountPercent = 0;
+                        decimal discountPrice = item.Price;
+
+                        if (item.Price > 500) discountPercent = 20;
+                        else if (item.Price < 200) discountPercent = 10;
+                        else if (item.Price < 100) discountPercent = 5;
+
+                        if (discountPercent > 0)
+                        {
+                            discountPrice = Math.Round(item.Price - (item.Price * discountPercent / 100), MidpointRounding.AwayFromZero);
+                        }
+                    }
+
+                    @if (discountPercent > 0)
+                    {
+                        <div class="text-danger small fw-bold mb-1">🔥 Special Discount!</div>
+                        <span class="text-success fw-bold fs-6">৳ @((int)discountPrice)</span>
+                        <span class="text-muted ms-2" style="text-decoration: line-through;">
+                            ৳ @((int)item.Price)
+                        </span>
+                        <span class="badge bg-danger ms-2">-@discountPercent%</span>
+                    }
+                    else
+                    {
+                        <span class="fw-bold fs-6">৳ @((int)item.Price)</span>
+                    }
+                </div>
+
                 <p class="small text-muted mb-1 text-truncate">@item.Description</p>
 
                 <div class="mt-auto d-grid gap-2">
-                    @* Display product-specific messages *@
+                    <!-- Product-specific messages -->
                     @if (errorProductId == item.Id && !string.IsNullOrEmpty(errorMessage))
                     {
                         <div class="alert alert-warning p-2 text-center mb-1">
@@ -60,37 +93,43 @@
                         </div>
                     }
 
-                    @if (userId != null)
+                    <!-- Add to Bag / Login (only for customers) -->
+                    @if (userRole != "Admin")
                     {
-                        @if (item.Quantity > 0)
+                        if (userId != null)
                         {
-                            <form asp-controller="Products" asp-action="Buy" method="post">
-                                <input type="hidden" name="productId" value="@item.Id" />
-                                <input type="number" name="quantity" value="1" min="1" max="@item.Quantity" class="form-control form-control-sm mb-1" />
-                                <button type="submit" class="btn btn-primary btn-sm rounded-pill">
-                                    🛒 Add to Bag
-                                </button>
-                            </form>
+                            if (item.Quantity > 0)
+                            {
+                                <form asp-controller="Products" asp-action="Buy" method="post">
+                                    <input type="hidden" name="productId" value="@item.Id" />
+                                    <input type="number" name="quantity" value="1" min="1" max="@item.Quantity" class="form-control form-control-sm mb-1" />
+                                    <button type="submit" class="btn btn-primary btn-sm rounded-pill">
+                                        🛒 Add to Bag
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning p-2 text-center mb-1">
+                                    ❌ Not Available Right Now
+                                </div>
+                            }
                         }
                         else
                         {
-                            <div class="alert alert-warning p-2 text-center mb-1">
-                                ❌ Not Available Right Now
-                            </div>
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-warning btn-sm rounded-pill">
+                                🛒 Login to Buy
+                            </a>
                         }
                     }
-                    else
-                    {
-                        <a href="@Url.Action("Login", "Account")" class="btn btn-warning btn-sm rounded-pill">
-                            🛒 Login to Buy
-                        </a>
-                    }
 
+                    <!-- Details Button (visible to all) -->
                     <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
                        class="btn btn-outline-secondary btn-sm rounded-pill">
                         Details
                     </a>
 
+                    <!-- Admin Options -->
                     @if (userRole == "Admin")
                     {
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm rounded-pill">Edit</a>
@@ -144,19 +183,15 @@
         overflow: hidden;
     }
 
-    .product-price {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #ff5722;
-        background: #fff3e0;
-        padding: 4px 8px;
-        border-radius: 12px;
-        display: inline-block;
+    .badge.bg-danger {
+        font-size: 0.75rem;
+        border-radius: 8px;
+        padding: 3px 6px;
     }
 </style>
 
-<!-- Auto-hide messages after 5 seconds -->
 <script>
+    // Auto-hide messages after 5 seconds
     document.addEventListener("DOMContentLoaded", function () {
         setTimeout(function () {
             const alerts = document.querySelectorAll('.alert');
