@@ -14,6 +14,20 @@
     </p>
 }
 
+<!-- Low Stock Alert -->
+@if (ViewBag.LowStockProducts != null && (ViewBag.LowStockProducts as List<Ecommerce.Models.Product>).Any())
+{
+    <div class="alert alert-warning">
+        <strong>⚠ Stock Alert:</strong> The following products have low stock (less than 05):
+        <ul>
+            @foreach (var p in ViewBag.LowStockProducts as List<Ecommerce.Models.Product>)
+            {
+                <li>@p.Name (Quantity: @p.Quantity)</li>
+            }
+        </ul>
+    </div>
+}
+
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -30,11 +44,17 @@
     <tbody>
         @foreach (var product in Model)
         {
-            <tr>
+            <tr class="@(product.Quantity < 05 ? "table-danger" : "")">
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>৳@product.Price.ToString("N2")</td>
-                <td>@product.Quantity</td>
+                <td>
+                    @product.Quantity
+                    @if (product.Quantity < 05)
+                    {
+                        <span class="badge bg-danger">Low</span>
+                    }
+                </td>
                 @if (userRole == "Admin")
                 {
                     <td>

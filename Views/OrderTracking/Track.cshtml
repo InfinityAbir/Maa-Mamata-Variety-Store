@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Track Order";
+}
+
+<h2>Track Your Order</h2>
+<form method="post" asp-action="Track" asp-controller="OrderTracking">
+    <div class="form-group">
+        <label>Enter Tracking Number</label>
+        <input type="text" name="trackingNumber" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Track</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-danger mt-3">@ViewBag.Message</div>
+}

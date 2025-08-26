@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Lenovo\\Desktop\\Project\\E-Commerce-website-main\\E-Commerce-website-main\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{531E5B42-0657-6603-61C8-1B2E47F866F4}|Ecommerce.csproj|c:\\users\\lenovo\\desktop\\project\\e-commerce-website-main\\e-commerce-website-main\\views\\order\\print.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{531E5B42-0657-6603-61C8-1B2E47F866F4}|Ecommerce.csproj|solutionrelative:views\\order\\print.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{531E5B42-0657-6603-61C8-1B2E47F866F4}|Ecommerce.csproj|c:\\users\\lenovo\\desktop\\project\\e-commerce-website-main\\e-commerce-website-main\\views\\products\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{531E5B42-0657-6603-61C8-1B2E47F866F4}|Ecommerce.csproj|solutionrelative:views\\products\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,14 +23,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Print.cshtml",
-              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\Project\\E-Commerce-website-main\\E-Commerce-website-main\\Views\\Order\\Print.cshtml",
-              "RelativeDocumentMoniker": "Views\\Order\\Print.cshtml",
-              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\Project\\E-Commerce-website-main\\E-Commerce-website-main\\Views\\Order\\Print.cshtml",
-              "RelativeToolTip": "Views\\Order\\Print.cshtml",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAACkAAAAKAAAAAAAAAA==",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\Project\\E-Commerce-website-main\\E-Commerce-website-main\\Views\\Products\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Products\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\Project\\E-Commerce-website-main\\E-Commerce-website-main\\Views\\Products\\Index.cshtml",
+              "RelativeToolTip": "Views\\Products\\Index.cshtml",
+              "ViewState": "AgIAAHUAAAAAAAAAAAAAAKgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-23T14:42:13.545Z",
+              "WhenOpened": "2025-08-26T06:55:29.44Z",
               "EditorCaption": ""
             }
           ]

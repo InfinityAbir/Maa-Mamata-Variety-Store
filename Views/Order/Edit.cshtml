@@ -12,6 +12,7 @@
             <form asp-action="Edit" method="post">
                 <input type="hidden" asp-for="OrderId" />
 
+                <!-- Customer Info -->
                 <div class="mb-3">
                     <label class="form-label">Customer Name</label>
                     <input class="form-control" value="@Model.CustomerName" disabled />
@@ -23,19 +24,42 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Total Amount</label>
-                    <input class="form-control" value="@Model.TotalAmount.ToString("C")" disabled />
+                    <label class="form-label">Customer Address</label>
+                    <input class="form-control" value="@Model.CustomerAddress" disabled />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Status" class="form-label">Order Status</label>
-                    <select asp-for="Status" class="form-select">
-                        <option value="Pending" selected="@Model.Status == " Pending"">Pending</option>
-                        <option value="Completed" selected="@Model.Status == " Completed"">Completed</option>
-                        <option value="Cancelled" selected="@Model.Status == " Cancelled"">Cancelled</option>
-                    </select>
+                    <label class="form-label">Customer Phone</label>
+                    <input class="form-control" value="@Model.CustomerPhone" disabled />
                 </div>
 
+                <!-- Order Amounts -->
+                <div class="mb-3">
+                    <label class="form-label">Subtotal</label>
+                    <input class="form-control" value="৳@(Model.TotalAmount - Model.DeliveryCharge)" N0")" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Delivery Charge</label>
+                    <input class="form-control" value="৳@Model.DeliveryCharge.ToString("N0")" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Total Amount</label>
+                    <input class="form-control" value="৳@Model.TotalAmount.ToString("N0")" disabled />
+                </div>
+
+                <!-- Order Status -->
+                <div class="mb-3">
+                    <label for="Status">Order Status</label>
+                    @Html.DropDownListFor(model => model.Status,
+                    new SelectList(new List<string> {
+                                        "Pending", "Processing", "Shipped", "OutForDelivery", "Delivered", "Cancelled"
+                                        }, Model.Status),
+                                        new { @class = "form-control" })
+                </div>
+
+                <!-- Payment Method -->
                 <div class="mb-3">
                     <label asp-for="PaymentMethod" class="form-label">Payment Method</label>
                     <select asp-for="PaymentMethod" class="form-select">
@@ -43,6 +67,7 @@
                     </select>
                 </div>
 
+                <!-- Actions -->
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Save Changes

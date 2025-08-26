@@ -2,6 +2,21 @@
 
 <h2>Shopping Cart</h2>
 
+<!-- Display error or success messages -->
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
 @if (!Model.Any())
 {
     <p>Your cart is empty.</p>
@@ -41,13 +56,6 @@ else
                     </td>
                     <td>৳@(item.Price* item.Quantity)</td>
                     <td>
-                        <form asp-action="Remove" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@item.ProductId" />
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="bi bi-trash me-1"></i> Remove
-                            </button>
-                        </form>
-
                         <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-info btn-sm ms-1">
                             Details
                         </a>

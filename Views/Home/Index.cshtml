@@ -1,15 +1,26 @@
 ﻿@{
-    ViewData["Title"] = "Home - Ma Mamata Varity Store";
+    ViewData["Title"] = "Home - Ma Mamata Variety Store";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
     /* Global Styles */
     body {
-        background: #f8f9fa !important; /* light flat background */
+        background: #f8f9fa !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
     }
+
+    /* Shared Hover Effect for All Sections */
+    .hero, .about-section, .highlights, .quote-section {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .hero:hover, .about-section:hover, .highlights:hover, .quote-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
 
     /* Hero Section */
     .hero {
@@ -51,7 +62,7 @@
         color: white;
         text-align: center;
         padding: 80px 20px;
-        border-radius: 0 0 40px 40px;
+        border-radius: 20px;
         margin-bottom: 50px;
     }
 
@@ -85,6 +96,7 @@
     .about-section p.lead {
         font-size: 1.1rem;
     }
+
     }
 
     /* Highlights Section */
@@ -127,7 +139,7 @@
 
     /* Quote Section */
     .quote-section {
-         background: linear-gradient(135deg, #2980b9, #27ae60);
+        background: linear-gradient(135deg, #2980b9, #27ae60);
         color: white;
         font-style: italic;
         padding: 40px 20px;
@@ -137,13 +149,15 @@
         max-width: 900px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
+
+    }
 </style>
 
 <main role="main">
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Ma Mamata Varity Store</h1>
+        <h1>Ma Mamata Variety Store</h1>
         <p class="lead">Your trusted shop for groceries & daily essentials</p>
         <p class="fst-italic" style="font-size: 1.1rem;">"Good food is the foundation of genuine happiness."</p>
         <a href="@Url.Action("Index", "Products")" class="btn btn-light shop-now-btn shadow-sm">
@@ -155,7 +169,7 @@
     <section class="about-section container my-5 py-5 px-4 text-center">
         <h2 class="mb-3">About Our Store</h2>
         <p class="lead mb-4">
-            At <strong>Ma Mamata Varity Store</strong>, we aim to provide high-quality groceries,
+            At <strong>Ma Mamata Variety Store</strong>, we aim to provide high-quality groceries,
             fresh products, and essentials at affordable prices. Our goal is to
             serve our community with trust and convenience.
         </p>
@@ -165,12 +179,10 @@
         </p>
     </section>
 
-
     <!-- Highlights Section -->
     <section class="highlights container my-5">
         <h2 class="fw-bold text-center mb-4">Why Choose Us?</h2>
         <div class="row g-4 justify-content-center">
-            <!-- Fresh Groceries -->
             <div class="col-md-4">
                 <div class="card text-center py-4">
                     <i class="bi bi-basket-fill fs-1 mb-3" style="color:#27ae60;"></i>
@@ -179,7 +191,6 @@
                 </div>
             </div>
 
-            <!-- Wide Variety -->
             <div class="col-md-4">
                 <div class="card text-center py-4">
                     <i class="bi bi-bag-fill fs-1 mb-3" style="color:#2980b9;"></i>
@@ -188,7 +199,6 @@
                 </div>
             </div>
 
-            <!-- Fast Delivery -->
             <div class="col-md-4">
                 <div class="card text-center py-4">
                     <i class="bi bi-truck fs-1 mb-3" style="color:#e67e22;"></i>

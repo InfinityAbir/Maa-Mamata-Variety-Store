@@ -1,4 +1,11 @@
-﻿@model List<Ecommerce.Models.CartItem>
+﻿@if (TempData["DeliveryError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["DeliveryError"]
+    </div>
+}
+
+@model List<Ecommerce.Models.CartItem>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
@@ -36,6 +43,15 @@
                             <input type="text" name="phone" class="form-control" placeholder="Enter your phone number" required />
                         </div>
 
+                        <!-- Delivery Location -->
+                        <div class="mb-3">
+                            <label class="form-label">Delivery Location</label>
+                            <select name="deliveryLocation" class="form-select" id="deliveryLocation" required>
+                                <option value="Inside Dhaka">Inside Dhaka (+৳60)</option>
+                                <option value="Outside Dhaka">Outside Dhaka (+৳100)</option>
+                            </select>
+                        </div>
+
                         <!-- Buttons -->
                         <div class="d-flex gap-2 mt-3">
                             <a asp-controller="Cart" asp-action="Index" class="btn btn-secondary w-50">Back to Cart</a>
@@ -58,12 +74,42 @@
                             </li>
                         }
                     </ul>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">৳@Model.Sum(c => c.Price * c.Quantity).ToString("N0")</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Delivery Charge:</span>
+                        <span id="deliveryCharge">৳60</span>
+                    </div>
+
+                    <hr />
                     <div class="d-flex justify-content-between fw-bold fs-5">
                         <span>Total:</span>
-                        <span>৳@Model.Sum(c => c.Price * c.Quantity).ToString("N0")</span>
+                        <span id="grandTotal">৳@(Model.Sum(c => c.Price * c.Quantity) + 60)</span>
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deliveryDropdown = document.getElementById("deliveryLocation");
+        const deliveryChargeEl = document.getElementById("deliveryCharge");
+        const grandTotalEl = document.getElementById("grandTotal");
+        const subtotal = @Model.Sum(c => c.Price * c.Quantity);
+
+        function updateTotal() {
+            let charge = deliveryDropdown.value === "Inside Dhaka" ? 60 : 100;
+            deliveryChargeEl.textContent = "৳" + charge;
+            grandTotalEl.textContent = "৳" + (subtotal + charge).toLocaleString();
+        }
+
+        deliveryDropdown.addEventListener("change", updateTotal);
+        updateTotal();
+    });
+</script>

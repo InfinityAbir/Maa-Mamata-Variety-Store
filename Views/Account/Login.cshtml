@@ -83,8 +83,10 @@
         </div>
         <div class="mb-3">
             <label asp-for="Role" class="form-label">Role</label>
-            <select asp-for="Role" asp-items="Html.GetEnumSelectList<Ecommerce.Models.Role>()" class="form-control" required>
+            <select asp-for="Role" class="form-control" required>
                 <option value="">Select Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Customer">Customer</option>
             </select>
             <span asp-validation-for="Role" class="text-danger"></span>
         </div>

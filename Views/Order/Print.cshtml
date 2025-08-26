@@ -2,6 +2,10 @@
 @{
     var shop = ViewBag.ShopInfo;
     Layout = null; // optional for clean print layout
+
+    // Calculate grand total (items total + delivery charge)
+    var itemsTotal = Model.OrderItems.Sum(i => i.Price * i.Quantity);
+    var grandTotal = itemsTotal + Model.DeliveryCharge;
 }
 
 <!DOCTYPE html>
@@ -23,21 +27,19 @@
         .table th, .table td {
             vertical-align: middle;
         }
+
         @@media print {
-            .no-print
-
-        {
-            display: none;
-        }
-
+            .no-print {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="shop-info">
-        <h3>Name: Maa Mamata Variety Store </h3>
+        <h3>Name: Maa Mamata Variety Store</h3>
         <p>Address: Kamarpara Notun Bazaar, Dhaka-1230</p>
-        <p>Phone:01686935887 | Email: saifulislam01686935887@gmail.com</p>
+        <p>Phone: 01686935887 | Email: saifulislam01686935887@gmail.com</p>
         <hr />
     </div>
 
@@ -48,9 +50,11 @@
         <p><strong>Email:</strong> @Model.CustomerEmail</p>
         <p><strong>Phone:</strong> @Model.CustomerPhone</p>
         <p><strong>Address:</strong> @Model.CustomerAddress</p>
-        <p><strong>Status:</strong> @Model.Status</p>
         <p><strong>Order Date:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
-        <p><strong>Total Amount:</strong> @Model.TotalAmount</p>
+
+        <!-- Delivery Charge & Grand Total -->
+        <p><strong>Delivery Charge:</strong> ৳@Model.DeliveryCharge.ToString("N0")</p>
+        <p><strong>Grand Total:</strong> <span class="fw-bold text-success">৳@grandTotal.ToString("N0")</span></p>
 
         <h5 class="mt-3">Items</h5>
         <table class="table table-bordered">
@@ -67,11 +71,26 @@
                 {
                     <tr>
                         <td>@item.ProductName</td>
-                        <td>@item.Price.ToString("C")</td>
+                        <td>৳@item.Price.ToString("N0")</td>
                         <td>@item.Quantity</td>
-                        <td>@(item.Price* item.Quantity)</td>
+                        <td>৳@(item.Price* item.Quantity)</td>
                     </tr>
                 }
+                <!-- Row for items total -->
+                <tr>
+                    <td colspan="3" class="text-end"><strong>Items Total</strong></td>
+                    <td><strong>৳@itemsTotal.ToString("N0")</strong></td>
+                </tr>
+                <!-- Row for delivery charge -->
+                <tr>
+                    <td colspan="3" class="text-end"><strong>Delivery Charge</strong></td>
+                    <td>৳@Model.DeliveryCharge.ToString("N0")</td>
+                </tr>
+                <!-- Final grand total row -->
+                <tr class="table-success">
+                    <td colspan="3" class="text-end"><strong>Grand Total</strong></td>
+                    <td><strong>৳@grandTotal.ToString("N0")</strong></td>
+                </tr>
             </tbody>
         </table>
     </div>

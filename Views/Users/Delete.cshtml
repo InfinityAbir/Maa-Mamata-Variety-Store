@@ -13,6 +13,11 @@
             <h4 class="mb-0">Confirm Delete</h4>
         </div>
         <div class="card-body">
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
             <p class="fw-semibold">Are you sure you want to delete this user?</p>
 
             <dl class="row mb-4">
@@ -22,8 +27,7 @@
                 <dt class="col-sm-4 fw-semibold">Email</dt>
                 <dd class="col-sm-8">@Model.Email</dd>
 
-                <dt class="col-sm-4 fw-semibold">Password</dt>
-                <dd class="col-sm-8">@Model.Password</dd>
+                <!-- Password hidden -->
 
                 <dt class="col-sm-4 fw-semibold">Role</dt>
                 <dd class="col-sm-8">@Model.Role</dd>
@@ -32,7 +36,8 @@
             <div class="d-flex justify-content-between">
                 <form asp-action="Delete" method="post">
                     <input type="hidden" asp-for="Id" />
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-danger"
+                            @(Model.Role == Ecommerce.Models.Role.Admin && ViewBag.AdminCount <= 1 ? "disabled" : "")>
                         <i class="bi bi-trash-fill"></i> Delete
                     </button>
                 </form>

@@ -22,6 +22,8 @@
                         <th>Order ID</th>
                         <th>Customer Name</th>
                         <th>Email</th>
+                        <th>Subtotal</th>
+                        <th>Delivery</th>
                         <th>Total Amount</th>
                         <th>Status</th>
                         <th>Order Date</th>
@@ -31,12 +33,15 @@
                 <tbody>
                     @foreach (var order in Model)
                     {
-                        <tr>
-                            <td>@order.OrderId</td>
-                            <td>@order.CustomerName</td>
-                            <td>@order.CustomerEmail</td>
-                            <td class="fw-bold text-success">@order.TotalAmount.ToString("C")</td>
-                            <td>
+                        var subtotal = order.TotalAmount - order.DeliveryCharge; // Calculate subtotal
+                                                                                 <tr>
+                                                                                     <td>@order.OrderId</td>
+                                                                                     <td>@order.CustomerName</td>
+                                                                                     <td>@order.CustomerEmail</td>
+                                                                                     <td class="fw-bold text-dark">৳@subtotal.ToString("N0")</td>
+                                                                                     <td class="fw-bold text-dark">৳@order.DeliveryCharge.ToString("N0")</td>
+                                                                                     <td class="fw-bold text-success">৳@order.TotalAmount.ToString("N0")</td>
+                                                                                     <td>
                                 @if (order.Status == "Pending")
                                 {
                                     <span class="badge bg-warning text-dark">@order.Status</span>
@@ -44,6 +49,18 @@
                                 else if (order.Status == "Completed")
                                 {
                                     <span class="badge bg-success">@order.Status</span>
+                                }
+                                else if (order.Status == "Processing")
+                                {
+                                    <span class="badge bg-info text-dark">@order.Status</span>
+                                }
+                                else if (order.Status == "Shipped")
+                                {
+                                    <span class="badge bg-primary text-white">@order.Status</span>
+                                }
+                                else if (order.Status == "Cancelled")
+                                {
+                                    <span class="badge bg-secondary text-white">@order.Status</span>
                                 }
                                 else
                                 {

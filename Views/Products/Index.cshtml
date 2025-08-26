@@ -3,6 +3,13 @@
 
 @{
     var userRole = Context.Session.GetString("UserRole");
+    var userId = Context.Session.GetInt32("UserId");
+
+    // Product-specific messages
+    var errorProductId = TempData["ErrorProductId"] != null ? (int)TempData["ErrorProductId"] : -1;
+    var errorMessage = TempData["Error"]?.ToString();
+    var successProductId = TempData["SuccessProductId"] != null ? (int)TempData["SuccessProductId"] : -1;
+    var successMessage = TempData["Success"]?.ToString();
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
@@ -35,16 +42,49 @@
 
                 <!-- Product Details -->
                 <h6 class="fw-bold text-truncate">@item.Name</h6>
-
+                <p class="product-price mb-1">৳@item.Price.ToString("F2")</p>
                 <p class="small text-muted mb-1 text-truncate">@item.Description</p>
 
                 <div class="mt-auto d-grid gap-2">
-                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <button type="submit" class="btn btn-primary btn-sm rounded-pill">
-                            🛒 Add to Bag
-                        </button>
-                    </form>
+                    @* Display product-specific messages *@
+                    @if (errorProductId == item.Id && !string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-warning p-2 text-center mb-1">
+                            @errorMessage
+                        </div>
+                    }
+                    @if (successProductId == item.Id && !string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success p-2 text-center mb-1">
+                            @successMessage
+                        </div>
+                    }
+
+                    @if (userId != null)
+                    {
+                        @if (item.Quantity > 0)
+                        {
+                            <form asp-controller="Products" asp-action="Buy" method="post">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <input type="number" name="quantity" value="1" min="1" max="@item.Quantity" class="form-control form-control-sm mb-1" />
+                                <button type="submit" class="btn btn-primary btn-sm rounded-pill">
+                                    🛒 Add to Bag
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning p-2 text-center mb-1">
+                                ❌ Not Available Right Now
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-warning btn-sm rounded-pill">
+                            🛒 Login to Buy
+                        </a>
+                    }
 
                     <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
                        class="btn btn-outline-secondary btn-sm rounded-pill">
@@ -63,7 +103,6 @@
 </div>
 
 <style>
-    /* Product Card Styling */
     .product-card {
         background: #fff;
         transition: all 0.2s ease-in-out;
@@ -104,4 +143,29 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+
+    .product-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #ff5722;
+        background: #fff3e0;
+        padding: 4px 8px;
+        border-radius: 12px;
+        display: inline-block;
+    }
 </style>
+
+<!-- Auto-hide messages after 5 seconds -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.classList.remove('show');
+                alert.classList.add('hide');
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = 0;
+            });
+        }, 5000);
+    });
+</script>

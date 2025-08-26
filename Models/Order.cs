@@ -28,6 +28,13 @@ namespace Ecommerce.Models
         public string PaymentMethod { get; set; } = "Cash on Delivery";
 
         public string Status { get; set; } = "Pending";
+        public decimal DeliveryCharge { get; set; }
+
+        // ✅ Tracking Number
+        public string TrackingNumber { get; set; } = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+
+        // ✅ Estimated Delivery Date
+        public DateTime EstimatedDeliveryDate { get; set; } = DateTime.Now.AddDays(5); // default 5 days
 
         // Navigation property
         public virtual List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

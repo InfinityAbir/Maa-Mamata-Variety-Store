@@ -672,3 +672,4 @@ C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\obj\Debug\net9.0\ref\Ecommerce.dll
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\obj\Debug\net9.0\compressed\ukstm540yu-sbxg3cbp75.gz
+C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\obj\Debug\net9.0\Ecommerce.sourcelink.json

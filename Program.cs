@@ -11,7 +11,7 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
 // Add MVC
 builder.Services.AddControllersWithViews();
 
-// Add session support (only once)
+// Add session support
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // session timeout
@@ -38,9 +38,9 @@ app.UseSession();
 
 app.UseAuthorization();
 
-// Route config
+// Updated default route: opens Home/Index first
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

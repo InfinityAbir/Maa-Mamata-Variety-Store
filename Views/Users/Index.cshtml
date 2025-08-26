@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "Users";
+    int adminCount = ViewBag.AdminCount ?? 0;
 }
 
 <div class="container py-4">
@@ -26,13 +27,13 @@
         <div class="row g-4">
             @foreach (var user in Model)
             {
+                bool isLastAdmin = user.Role == Ecommerce.Models.Role.Admin && adminCount <= 1;
                 <div class="col-md-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
                             <h5 class="card-title">@user.Name</h5>
                             <p class="card-text mb-1"><strong>Email:</strong> @user.Email</p>
                             <p class="card-text mb-1"><strong>Role:</strong> @user.Role</p>
-                            @* Removed password display *@
                         </div>
                         <div class="card-footer d-flex justify-content-between">
                             <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary btn-sm">
@@ -41,7 +42,9 @@
                             <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-info btn-sm text-white">
                                 <i class="bi bi-eye"></i> Details
                             </a>
-                            <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">
+                            <a asp-action="Delete" asp-route-id="@user.Id"
+                               class="btn btn-danger btn-sm @(isLastAdmin ? "disabled" : "")"
+                               aria-disabled="@(isLastAdmin ? "true" : "false")">
                                 <i class="bi bi-trash"></i> Delete
                             </a>
                         </div>

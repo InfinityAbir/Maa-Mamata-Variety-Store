@@ -10,12 +10,43 @@
             <div class="mb-4">
                 <p><strong>Order ID:</strong> <span class="text-primary">@Model.OrderId</span></p>
                 <p><strong>Customer Name:</strong> @Model.CustomerName</p>
-                <p><strong>Total Amount:</strong> <span class="fw-bold">৳@Model.TotalAmount.ToString("N0")</span></p>
+
+                <!-- ✅ Order Summary -->
+                @{
+                    decimal subtotal = Model.OrderItems.Sum(i => i.Price * i.Quantity);
+                }
+                <p><strong>Subtotal:</strong> <span class="fw-bold">৳@subtotal.ToString("N0")</span></p>
+                <p><strong>Delivery Charge:</strong> <span class="fw-bold">৳@Model.DeliveryCharge.ToString("N0")</span></p>
+                <p><strong>Grand Total:</strong> <span class="fw-bold text-success">৳@Model.TotalAmount.ToString("N0")</span></p>
+
                 <p>
                     <strong>Status:</strong>
-                    <span class="badge bg-info text-dark">@Model.Status</span>
+                    <span class="badge @(Model.Status == "Pending" ? "bg-warning text-dark" :
+                                                                  Model.Status == "Processing" ? "bg-info text-dark" :
+                                                                  Model.Status == "Shipped" ? "bg-primary text-white" :
+                                                                  Model.Status == "Delivered" ? "bg-success text-white" : "bg-secondary text-white")">
+                        @Model.Status
+                    </span>
                 </p>
                 <p><strong>Payment Method:</strong> @Model.PaymentMethod</p>
+
+                <!-- Tracking Number with Copy -->
+                <p>
+                    <strong>Tracking Number:</strong>
+                    <span id="trackingNumber" class="text-primary fw-bold">@Model.TrackingNumber</span>
+                    <button id="copyBtn" class="btn btn-sm btn-outline-secondary ms-2 position-relative">
+                        <i class="bi bi-clipboard"></i> Copy
+                        <span id="copyTooltip" class="position-absolute top-100 start-50 translate-middle bg-dark text-white px-2 py-1 rounded" style="font-size:0.75rem; display:none;">
+                            Copied!
+                        </span>
+                    </button>
+                </p>
+
+                <!-- Estimated Delivery -->
+                <p>
+                    <strong>Estimated Delivery:</strong>
+                    <span class="text-success fw-bold">@Model.EstimatedDeliveryDate.ToString("dddd, MMM dd")</span>
+                </p>
             </div>
 
             <h4 class="mt-4">Order Items</h4>
@@ -23,6 +54,7 @@
                 <thead>
                     <tr>
                         <th>Product</th>
+                        <th>Description</th>
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Total</th>
@@ -33,19 +65,52 @@
                     {
                         <tr>
                             <td>@item.ProductName</td>
+                            <td>@item.Product?.Description</td>
                             <td>@item.Quantity</td>
                             <td>৳@item.Price.ToString("N0")</td>
                             <td>৳@(item.Price* item.Quantity)</td>
                         </tr>
                     }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4" class="text-end">Subtotal</th>
+                        <th>৳@Model.OrderItems.Sum(i => i.Price * i.Quantity).ToString("N0")</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-end">Delivery Charge</th>
+                        <th>৳@Model.DeliveryCharge.ToString("N0")</th>
+                    </tr>
+                    <tr class="table-success">
+                        <th colspan="4" class="text-end">Grand Total</th>
+                        <th>৳@Model.TotalAmount.ToString("N0")</th>
+                    </tr>
+                </tfoot>
             </table>
 
-            <div class="mt-4">
+
+            <div class="mt-4 d-flex gap-2">
                 <a href="@Url.Action("Index", "Products")" class="btn btn-primary">
                     Continue Shopping
+                </a>
+                <a class="btn btn-success"
+                   href="@Url.Action("Track", "OrderTracking")?trackingNumber=@Model.TrackingNumber">
+                    Track My Order
                 </a>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const copyBtn = document.getElementById("copyBtn");
+    const tooltip = document.getElementById("copyTooltip");
+
+    copyBtn.addEventListener("click", function () {
+        const tracking = document.getElementById("trackingNumber").innerText;
+        navigator.clipboard.writeText(tracking).then(() => {
+            tooltip.style.display = "block";
+            setTimeout(() => { tooltip.style.display = "none"; }, 1500);
+        }).catch(err => console.error("Failed to copy: ", err));
+    });
+</script>

@@ -70,6 +70,7 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\lib\jquery\LICENSE.txt
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\css\site.css
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\favicon.ico
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\js\site.js
@@ -131,4 +132,3 @@ C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\lib\jquery\dist\jquery.slim.js
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\lib\jquery\dist\jquery.slim.min.map
-C:\Users\Lenovo\Desktop\Project\E-Commerce-website-main\E-Commerce-website-main\wwwroot\lib\jquery\LICENSE.txt

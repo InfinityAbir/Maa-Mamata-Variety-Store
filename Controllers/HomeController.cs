@@ -1,40 +1,38 @@
 using System.Diagnostics;
+using Ecommerce.Helpers;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly EcommerceDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, EcommerceDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // GET: Home/Index
+        public async Task<IActionResult> Index()
         {
-            // Check if user is logged in
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                // Not logged in, redirect to login
-                return RedirectToAction("Login", "Account");
-            }
+            // Fetch all products to display on home page
+            var products = await _context.Products.ToListAsync();
 
-            // User is logged in, show the home page
-            return View();
+            // Load cart count from session (if exists)
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("CartSession") ?? new List<CartItem>();
+            ViewBag.CartCount = cart.Sum(c => c.Quantity);
+
+            return View(products); // You can reuse Products/Index view here
         }
 
+        // GET: Privacy (optional)
         public IActionResult Privacy()
         {
-            // Optional: protect Privacy page too
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             return View();
         }
 
