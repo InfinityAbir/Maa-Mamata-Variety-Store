@@ -45,35 +45,9 @@
                 <!-- Product Details -->
                 <h6 class="fw-bold text-truncate">@item.Name</h6>
 
-                <!-- Discount Logic -->
+                <!-- Display Real Price Only -->
                 <div class="mb-1">
-                    @{
-                        int discountPercent = 0;
-                        decimal discountPrice = item.Price;
-
-                        if (item.Price > 500) discountPercent = 20;
-                        else if (item.Price < 200) discountPercent = 10;
-                        else if (item.Price < 100) discountPercent = 5;
-
-                        if (discountPercent > 0)
-                        {
-                            discountPrice = Math.Round(item.Price - (item.Price * discountPercent / 100), MidpointRounding.AwayFromZero);
-                        }
-                    }
-
-                    @if (discountPercent > 0)
-                    {
-                        <div class="text-danger small fw-bold mb-1">🔥 Special Discount!</div>
-                        <span class="text-success fw-bold fs-6">৳ @((int)discountPrice)</span>
-                        <span class="text-muted ms-2" style="text-decoration: line-through;">
-                            ৳ @((int)item.Price)
-                        </span>
-                        <span class="badge bg-danger ms-2">-@discountPercent%</span>
-                    }
-                    else
-                    {
-                        <span class="fw-bold fs-6">৳ @((int)item.Price)</span>
-                    }
+                    <span class="fw-bold fs-6">৳ @((int)item.Price)</span>
                 </div>
 
                 <p class="small text-muted mb-1 text-truncate">@item.Description</p>
@@ -148,10 +122,10 @@
         border: 1px solid #f1f1f1;
     }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-        }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
 
     .product-img-container {
         height: 180px;
@@ -161,12 +135,12 @@
         overflow: hidden;
     }
 
-        .product-img-container img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease-in-out;
-        }
+    .product-img-container img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
 
     .product-card:hover img {
         transform: scale(1.05);
