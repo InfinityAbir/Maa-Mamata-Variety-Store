@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Ecommerce.Models.Order>
+@model IEnumerable<Ecommerce.Models.Order>
 
 @{
     ViewData["Title"] = "Manage Orders";
@@ -6,6 +6,22 @@
 
 <div class="container py-4">
     <h2 class="mb-4 text-primary">Manage Orders</h2>
+
+    <!-- Display success/error messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     @if (!Model.Any())
     {
@@ -33,38 +49,35 @@
                 <tbody>
                     @foreach (var order in Model)
                     {
-                        var subtotal = order.TotalAmount - order.DeliveryCharge; // Calculate subtotal
-                                                                                 <tr>
-                                                                                     <td>@order.OrderId</td>
-                                                                                     <td>@order.CustomerName</td>
-                                                                                     <td>@order.CustomerEmail</td>
-                                                                                     <td class="fw-bold text-dark">৳@subtotal.ToString("N0")</td>
-                                                                                     <td class="fw-bold text-dark">৳@order.DeliveryCharge.ToString("N0")</td>
-                                                                                     <td class="fw-bold text-success">৳@order.TotalAmount.ToString("N0")</td>
-                                                                                     <td>
-                                @if (order.Status == "Pending")
+                        var subtotal = order.TotalAmount - order.DeliveryCharge;
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.CustomerEmail</td>
+                            <td class="fw-bold text-dark">৳@subtotal.ToString("N0")</td>
+                            <td class="fw-bold text-dark">৳@order.DeliveryCharge.ToString("N0")</td>
+                            <td class="fw-bold text-success">৳@order.TotalAmount.ToString("N0")</td>
+                            <td>
+                                @switch (order.Status)
                                 {
-                                    <span class="badge bg-warning text-dark">@order.Status</span>
-                                }
-                                else if (order.Status == "Completed")
-                                {
-                                    <span class="badge bg-success">@order.Status</span>
-                                }
-                                else if (order.Status == "Processing")
-                                {
-                                    <span class="badge bg-info text-dark">@order.Status</span>
-                                }
-                                else if (order.Status == "Shipped")
-                                {
-                                    <span class="badge bg-primary text-white">@order.Status</span>
-                                }
-                                else if (order.Status == "Cancelled")
-                                {
-                                    <span class="badge bg-secondary text-white">@order.Status</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">@order.Status</span>
+                                    case "Pending":
+                                        <span class="badge bg-warning text-dark">@order.Status</span>
+                                        break;
+                                    case "Completed":
+                                        <span class="badge bg-success">@order.Status</span>
+                                        break;
+                                    case "Processing":
+                                        <span class="badge bg-info text-dark">@order.Status</span>
+                                        break;
+                                    case "Shipped":
+                                        <span class="badge bg-primary text-white">@order.Status</span>
+                                        break;
+                                    case "Cancelled":
+                                        <span class="badge bg-secondary text-white">@order.Status</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">@order.Status</span>
+                                        break;
                                 }
                             </td>
                             <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
@@ -72,11 +85,14 @@
                                 <a asp-action="Edit" asp-route-id="@order.OrderId" class="btn btn-sm btn-outline-primary me-1">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
+
                                 <form asp-action="Delete" asp-route-id="@order.OrderId" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this order?');">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
                                 </form>
+
                                 <a asp-action="Print" asp-route-id="@order.OrderId" target="_blank" class="btn btn-sm btn-outline-secondary ms-1">
                                     <i class="bi bi-printer"></i> Print
                                 </a>
@@ -88,3 +104,18 @@
         </div>
     }
 </div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+</style>
