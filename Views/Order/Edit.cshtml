@@ -1,4 +1,4 @@
-﻿@model Ecommerce.Models.Order
+@model Ecommerce.Models.Order
 
 @{
     ViewData["Title"] = "Edit Order";
@@ -10,43 +10,44 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="OrderId" />
 
-                <!-- Customer Info -->
+                <!-- Customer Info (readonly) -->
                 <div class="mb-3">
                     <label class="form-label">Customer Name</label>
-                    <input class="form-control" value="@Model.CustomerName" disabled />
+                    <input class="form-control" asp-for="CustomerName" readonly />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Customer Email</label>
-                    <input class="form-control" value="@Model.CustomerEmail" disabled />
+                    <input class="form-control" asp-for="CustomerEmail" readonly />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Customer Address</label>
-                    <input class="form-control" value="@Model.CustomerAddress" disabled />
+                    <input class="form-control" asp-for="CustomerAddress" readonly />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Customer Phone</label>
-                    <input class="form-control" value="@Model.CustomerPhone" disabled />
+                    <input class="form-control" asp-for="CustomerPhone" readonly />
                 </div>
 
                 <!-- Order Amounts -->
                 <div class="mb-3">
                     <label class="form-label">Subtotal</label>
-                    <input class="form-control" value="৳@(Model.TotalAmount - Model.DeliveryCharge)" N0")" disabled />
+                    <input class="form-control" value="৳@(Model.TotalAmount - Model.DeliveryCharge).ToString(" N0")" readonly />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Delivery Charge</label>
-                    <input class="form-control" value="৳@Model.DeliveryCharge.ToString("N0")" disabled />
+                    <input class="form-control" value="৳@Model.DeliveryCharge.ToString("N0")" readonly />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Total Amount</label>
-                    <input class="form-control" value="৳@Model.TotalAmount.ToString("N0")" disabled />
+                    <input class="form-control" value="৳@Model.TotalAmount.ToString("N0")" readonly />
                 </div>
 
                 <!-- Order Status -->
@@ -57,14 +58,6 @@
                                         "Pending", "Processing", "Shipped", "OutForDelivery", "Delivered", "Cancelled"
                                         }, Model.Status),
                                         new { @class = "form-control" })
-                </div>
-
-                <!-- Payment Method -->
-                <div class="mb-3">
-                    <label asp-for="PaymentMethod" class="form-label">Payment Method</label>
-                    <select asp-for="PaymentMethod" class="form-select">
-                        <option value="Cash on Delivery" selected="@Model.PaymentMethod == " Cash on Delivery"">Cash on Delivery</option>
-                    </select>
                 </div>
 
                 <!-- Actions -->
