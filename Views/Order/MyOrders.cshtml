@@ -1,4 +1,4 @@
-﻿@model List<Ecommerce.Models.Order>
+@model List<Ecommerce.Models.Order>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -38,10 +38,10 @@
                     cancelTooltip = "Order already cancelled";
                 }
 
-                // ✅ Calculate subtotal and delivery charge dynamically
+                // ✅ Use backend-calculated values
                 decimal subtotal = order.OrderItems.Sum(i => i.Price * i.Quantity);
-                decimal deliveryCharge = order.CustomerAddress?.ToLower().Contains("dhaka") == true ? 60 : 100;
-                decimal grandTotal = subtotal + deliveryCharge;
+                decimal deliveryCharge = order.DeliveryCharge; // from backend
+                decimal grandTotal = order.TotalAmount; // from backend
 
                 <div class="col-lg-6 col-md-12">
                     <div class="card shadow-sm border-0 order-card">
@@ -49,12 +49,12 @@
                         <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white rounded-top">
                             <span class="fw-bold">Order #@order.OrderId</span>
                             <span class="badge
-                                                            @(order.Status == "Pending" ? "bg-warning text-dark" :
-                                                                                        order.Status == "Processing" ? "bg-info text-dark" :
-                                                                                        order.Status == "Shipped" ? "bg-primary text-white" :
-                                                                                        order.Status == "Delivered" ? "bg-success text-white" :
-                                                                                        order.Status == "Cancelled" ? "bg-secondary text-white" :
-                                                                                        "bg-secondary")">
+                                        @(order.Status == "Pending" ? "bg-warning text-dark" :
+                                                                    order.Status == "Processing" ? "bg-info text-dark" :
+                                                                    order.Status == "Shipped" ? "bg-primary text-white" :
+                                                                    order.Status == "Delivered" ? "bg-success text-white" :
+                                                                    order.Status == "Cancelled" ? "bg-secondary text-white" :
+                                                                    "bg-secondary")">
                         @order.Status
                     </span>
                 </div>
@@ -63,7 +63,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between flex-wrap mb-2">
                                 <span><strong>Subtotal:</strong> ৳@subtotal.ToString("N0")</span>
-                                <span><strong>Delivery:</strong> ৳@deliveryCharge</span>
+                                <span><strong>Delivery:</strong> ৳@deliveryCharge.ToString("N0")</span>
                             </div>
                             <div class="d-flex justify-content-between flex-wrap mb-2">
                                 <span><strong>Grand Total:</strong> <span class="text-success fw-bold">৳@grandTotal.ToString("N0")</span></span>
@@ -78,7 +78,7 @@
                                 @bangladeshTime.ToString("dd MMM yyyy, hh:mm tt")
                             </div>
 
-                            <!-- Only show Grand Total, no individual items -->
+                            <!-- Grand Total Card -->
                             <div class="row g-3 mb-3">
                                 <div class="col-12 mt-2">
                                     <div class="d-flex justify-content-between align-items-center border rounded-3 p-2 shadow-sm fw-bold fs-6 text-success bg-light">
